@@ -18,7 +18,7 @@ def auth_get(url, spotify_acces_token):
   print('url: ', url)
   result = requests.get(url, headers={"Authorization": "Bearer {}".format(spotify_acces_token)}).json()
   return result
-  
+
     
 def retrieve_audio_features(track_ids, spotify_acces_token):
   request_url = 'https://api.spotify.com/v1/audio-features/?ids={0}'.format(','.join(track_ids))
@@ -87,7 +87,7 @@ if __name__ == '__main__':
       unique_csv_df = csv_df.drop_duplicates(subset=['Track Name', 'Artist'])
       unique_tracks_df = pd.concat([unique_tracks_df, unique_csv_df]).drop_duplicates().reset_index(drop=True)
 
-    unique_tracks_df['spotify_id'] = [re.sub('^https://open.spotify.com/track/', '', track['URL']) 
+    unique_tracks_df['spotify_id'] = [re.sub('^https://open.spotify.com/track/', '', str(track['URL']))
       for index, track in unique_tracks_df.iterrows()]
 
 
