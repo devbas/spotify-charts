@@ -34,22 +34,25 @@ def collect_audio_features(features):
     print('features: ', features)
   
   for feature in features['audio_features']: 
-    audio_features_df = audio_features_df.append({
-      'acousticness': feature['acousticness'],
-      'danceability': feature['danceability'],
-      'duration_ms': feature['duration_ms'],
-      'energy': feature['energy'],
-      'instrumentalness': feature['instrumentalness'],
-      'spotify_id': feature['id'],
-      'pitch_key': feature['key'],
-      'liveness': feature['liveness'],
-      'loudness': feature['loudness'],
-      'mode': feature['mode'],
-      'speechiness': feature['speechiness'],
-      'tempo': feature['tempo'],
-      'time_signature': feature['time_signature'],
-      'valence': feature['valence']
-    }, ignore_index=True)
+    try: 
+      audio_features_df = audio_features_df.append({
+        'acousticness': feature['acousticness'],
+        'danceability': feature['danceability'],
+        'duration_ms': feature['duration_ms'],
+        'energy': feature['energy'],
+        'instrumentalness': feature['instrumentalness'],
+        'spotify_id': feature['id'],
+        'pitch_key': feature['key'],
+        'liveness': feature['liveness'],
+        'loudness': feature['loudness'],
+        'mode': feature['mode'],
+        'speechiness': feature['speechiness'],
+        'tempo': feature['tempo'],
+        'time_signature': feature['time_signature'],
+        'valence': feature['valence']
+      }, ignore_index=True)
+    except TypeError as e:
+      print('typeerror feature: ', feature)
 
 
 if __name__ == '__main__':
