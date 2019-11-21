@@ -21,10 +21,13 @@ def auth_get(url, spotify_acces_token):
 
     
 def retrieve_audio_features(track_ids, spotify_acces_token):
-  request_url = 'https://api.spotify.com/v1/audio-features/?ids={0}'.format(','.join(track_ids))
+  try:
+    request_url = 'https://api.spotify.com/v1/audio-features/?ids={0}'.format(','.join(track_ids))
   
-  features = auth_get(request_url, spotify_acces_token)
-  return features
+    features = auth_get(request_url, spotify_acces_token)
+    return features
+  except Exception as e: 
+    print('Exception: ', e)
 
 
 def collect_audio_features(features):
@@ -51,7 +54,7 @@ def collect_audio_features(features):
         'time_signature': feature['time_signature'],
         'valence': feature['valence']
       }, ignore_index=True)
-    except TypeError as e:
+    except TypeError:
       print('typeerror feature: ', feature)
 
 
