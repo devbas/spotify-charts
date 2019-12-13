@@ -36,6 +36,23 @@ def collect_audio_features(features):
   if not features['audio_features']: 
     print('features: ', features)
   
+  audio_features_df = pd.DataFrame(columns=[
+    'acousticness', 
+    'danceability', 
+    'duration_ms', 
+    'energy', 
+    'instrumentalness',
+    'spotify_id', 
+    'pitch_key', 
+    'liveness', 
+    'loudness', 
+    'mode', 
+    'speechiness', 
+    'tempo', 
+    'time_signature', 
+    'valence'
+  ])
+
   for feature in features['audio_features']: 
     try: 
       audio_features_df = audio_features_df.append({
@@ -56,7 +73,8 @@ def collect_audio_features(features):
       }, ignore_index=True)
     except TypeError:
       print('typeerror feature: ', feature)
-
+  
+  audio_features_df.to_csv('audio_features.csv', mode='a', header=False)
 
 if __name__ == '__main__':
 
@@ -96,24 +114,6 @@ if __name__ == '__main__':
     unique_tracks_df['spotify_id'] = [re.sub('^https://open.spotify.com/track/', '', str(track['URL']))
       for index, track in unique_tracks_df.iterrows()]
 
-
-    audio_features_df = pd.DataFrame(columns=[
-      'acousticness', 
-      'danceability', 
-      'duration_ms', 
-      'energy', 
-      'instrumentalness',
-      'spotify_id', 
-      'pitch_key', 
-      'liveness', 
-      'loudness', 
-      'mode', 
-      'speechiness', 
-      'tempo', 
-      'time_signature', 
-      'valence'
-    ])
-
     pool = mp.Pool(mp.cpu_count())
 
     i = 0
@@ -125,6 +125,7 @@ if __name__ == '__main__':
 
       if (i / 100).is_integer():
         pool.apply_async(retrieve_audio_features, args=(track_ids, spotify_acces_token), callback=collect_audio_features)
+        
         track_ids = []
       elif len(unique_tracks_df) == i: 
         pool.apply_async(retrieve_audio_features, args=(track_ids, spotify_acces_token), callback=collect_audio_features)
@@ -135,7 +136,7 @@ if __name__ == '__main__':
 
     print('length: ', str(len(unique_tracks_df)))
 
-    audio_features_df.to_csv('audio_features.csv')
+    
 
   except Exception as e:
     print('e: ', e)
